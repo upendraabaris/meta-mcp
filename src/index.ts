@@ -16,7 +16,8 @@ import { registerCampaignResources } from "./resources/campaigns.js";
 import { registerInsightsResources } from "./resources/insights.js";
 import { registerAudienceResources } from "./resources/audiences.js";
 
-async function main() {
+
+export async function main() {
   try {
     console.error("🚀 Starting Meta Marketing API MCP Server...");
     console.error("📋 Environment check:");
@@ -722,6 +723,9 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);
   process.exit(1);
 });
+
+
+
 
 // Start the server automatically (this is a CLI tool)
 main().catch((error) => {

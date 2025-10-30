@@ -2,11 +2,11 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-// Create an MCP server
+// // Create an MCP server
 const server = new McpServer({
-  name: "demo-server",
+  name: "meta-ads",
   version: "1.0.0"
-});
+}); 
 
 // Add an addition tool
 server.registerTool("add",
@@ -39,3 +39,12 @@ server.registerResource(
 // Start receiving messages on stdin and sending messages on stdout
 const transport = new StdioServerTransport();
 await server.connect(transport);
+
+
+// import {main} from "./src/index.js";
+
+// main().catch((err) => {
+//   const transport = new StdioServerTransport();
+//   server.connect(transport);
+//   console.error("Failed to start Meta server:", err);
+// });

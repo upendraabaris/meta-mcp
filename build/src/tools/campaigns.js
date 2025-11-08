@@ -1,4 +1,4 @@
-import { ListCampaignsSchema, CreateCampaignSchema, UpdateCampaignSchema, DeleteCampaignSchema, ListAdSetsSchema, CreateAdSetSchema, } from "../types/mcp-tools.js";
+import { ListCampaignsSchema, CreateCampaignSchema, UpdateCampaignSchema, DeleteCampaignSchema, ListAdSetsSchema, CreateAdSetSchema, } from "../types/mcp-tools";
 export function setupCampaignTools(server, metaClient) {
     registerCampaignTools(server, metaClient);
 }

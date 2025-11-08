@@ -2,7 +2,8 @@
 import { config } from "dotenv";
 config({ path: ".env.local" }); // Load environment variables from .env.local file
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+// import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+// import { HttpServerTransport } from "@modelcontextprotocol/sdk/server/http.js";
 import { MetaApiClient } from "./meta-client.js";
 import { AuthManager } from "./utils/auth.js";
 import { registerCampaignTools } from "./tools/campaigns.js";
@@ -13,6 +14,7 @@ import { registerOAuthTools } from "./tools/oauth.js";
 import { registerCampaignResources } from "./resources/campaigns.js";
 import { registerInsightsResources } from "./resources/insights.js";
 import { registerAudienceResources } from "./resources/audiences.js";
+import express from "express";
 export async function main() {
     try {
         console.error("🚀 Starting Meta Marketing API MCP Server...");
@@ -71,6 +73,7 @@ export async function main() {
         console.error("   ✅ Insights resources registered");
         registerAudienceResources(server, metaClient);
         console.error("   ✅ Audience resources registered");
+        const port = Number(process.env.PORT || 5000);
         // Add account discovery tool
         server.tool("get_ad_accounts", {}, async () => {
             try {
@@ -631,8 +634,30 @@ export async function main() {
         console.error(`🔧 Meta API Version: ${auth.getApiVersion()}`);
         // Connect to transport
         console.error("🚀 Attempting server connection...");
-        const transport = new StdioServerTransport();
-        await server.connect(transport);
+        // const transport = new StdioServerTransport();
+        // await server.connect(transport);
+        const app = express();
+        app.use(express.json());
+        app.post("/v1/mcp", async (req, res) => {
+            try {
+                const result = await server.handle(req.body);
+                res.json(result);
+            }
+            catch (err) {
+                console.error("MCP error:", err);
+                res.status(500).json({ error: err.message });
+            }
+        });
+        // 3️⃣ Start HTTP server
+        app.listen(port, () => {
+            console.log("🌐 HTTP bridge listening on http://0.0.0.0:5000");
+        });
+        // const transport = new HttpServerTransport({
+        //   port,
+        //   host: "0.0.0.0"  // Allow external connections
+        // });
+        // await server.connect(transport);
+        console.error(`✅ Server listening on http://localhost:${port}`);
         console.error("✅ Transport connection established");
         console.error("✅ Meta Marketing API MCP Server started successfully");
         console.error("🎯 Ready to receive requests from MCP clients");

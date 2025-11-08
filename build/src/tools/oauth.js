@@ -1,4 +1,4 @@
-import { GenerateAuthUrlSchema, ExchangeCodeSchema, RefreshTokenSchema, GenerateSystemTokenSchema, } from "../types/mcp-tools.js";
+import { GenerateAuthUrlSchema, ExchangeCodeSchema, RefreshTokenSchema, GenerateSystemTokenSchema, } from "../types/mcp-tools";
 export function setupOAuthTools(server, authManager) {
     registerOAuthTools(server, authManager);
 }

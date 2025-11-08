@@ -36,7 +36,7 @@
     "marketing-api"
   ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.15.1",
+    "@modelcontextprotocol/sdk": "^1.13.0",
     "@vercel/kv": "^3.0.0",
     "@vercel/mcp-adapter": "^0.11.2",
     "dotenv": "^17.2.0",
@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
+    "@types/express": "^5.0.5",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.19.8",
     "@typescript-eslint/eslint-plugin": "^8.37.0",

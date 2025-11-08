@@ -4,7 +4,8 @@ import { config } from "dotenv";
 config({ path: ".env.local" }); // Load environment variables from .env.local file
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+// import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+// import { HttpServerTransport } from "@modelcontextprotocol/sdk/server/http.js";
 import { MetaApiClient } from "./meta-client.js";
 import { AuthManager } from "./utils/auth.js";
 import { registerCampaignTools } from "./tools/campaigns.js";
@@ -16,6 +17,7 @@ import { registerCampaignResources } from "./resources/campaigns.js";
 import { registerInsightsResources } from "./resources/insights.js";
 import { registerAudienceResources } from "./resources/audiences.js";
 
+import express from "express";
 
 export async function main() {
   try {
@@ -23,8 +25,7 @@ export async function main() {
     console.error("📋 Environment check:");
     console.error(`   NODE_VERSION: ${process.version}`);
     console.error(
-      `   META_ACCESS_TOKEN: ${
-        process.env.META_ACCESS_TOKEN ? "Present" : "Missing"
+      `   META_ACCESS_TOKEN: ${process.env.META_ACCESS_TOKEN ? "Present" : "Missing"
       }`,
     );
     console.error(
@@ -48,13 +49,11 @@ export async function main() {
         process.env.META_APP_ID && process.env.META_APP_SECRET
       );
       console.error(
-        `🔧 OAuth configuration: ${
-          hasOAuthConfig ? "Available" : "Not configured"
+        `🔧 OAuth configuration: ${hasOAuthConfig ? "Available" : "Not configured"
         }`,
       );
       console.error(
-        `🔄 Auto-refresh: ${
-          process.env.META_AUTO_REFRESH === "true" ? "Enabled" : "Disabled"
+        `🔄 Auto-refresh: ${process.env.META_AUTO_REFRESH === "true" ? "Enabled" : "Disabled"
         }`,
       );
     } catch (error) {
@@ -100,6 +99,8 @@ export async function main() {
     registerAudienceResources(server, metaClient);
     console.error("   ✅ Audience resources registered");
 
+    const port = Number(process.env.PORT || 5000);
+
     // Add account discovery tool
     server.tool("get_ad_accounts", {}, async () => {
       try {
@@ -114,9 +115,9 @@ export async function main() {
           balance: account.balance,
           business: account.business
             ? {
-                id: account.business.id,
-                name: account.business.name,
-              }
+              id: account.business.id,
+              name: account.business.name,
+            }
             : null,
         }));
 
@@ -681,16 +682,38 @@ export async function main() {
 
     console.error("🔗 Connecting to MCP transport...");
     console.error(
-      `📊 Server: ${
-        process.env.MCP_SERVER_NAME || "Meta Marketing API Server"
+      `📊 Server: ${process.env.MCP_SERVER_NAME || "Meta Marketing API Server"
       } v${process.env.MCP_SERVER_VERSION || "1.0.0"}`,
     );
     console.error(`🔧 Meta API Version: ${auth.getApiVersion()}`);
 
     // Connect to transport
     console.error("🚀 Attempting server connection...");
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
+    // const transport = new StdioServerTransport();
+    // await server.connect(transport);
+     const app = express();
+  app.use(express.json());
+
+  app.post("/v1/mcp", async (req, res) => {
+    try {
+      const result = await (server as any).handle(req.body);
+      res.json(result);
+    } catch (err) {
+      console.error("MCP error:", err);
+      res.status(500).json({ error: (err as Error).message });
+    }
+  });
+
+  // 3️⃣ Start HTTP server
+  app.listen(port, () => {
+    console.log("🌐 HTTP bridge listening on http://0.0.0.0:5000");
+  });
+    // const transport = new HttpServerTransport({
+    //   port,
+    //   host: "0.0.0.0"  // Allow external connections
+    // });
+    // await server.connect(transport);
+    console.error(`✅ Server listening on http://localhost:${port}`);
     console.error("✅ Transport connection established");
 
     console.error("✅ Meta Marketing API MCP Server started successfully");

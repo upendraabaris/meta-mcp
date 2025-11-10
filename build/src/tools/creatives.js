@@ -1,4 +1,4 @@
-import { ListCreativesSchema, CreateAdCreativeSchema, PreviewAdSchema, TroubleshootCreativeSchema, AnalyzeCreativesSchema, CreativeValidationEnhancedSchema, UploadImageFromUrlSchema, } from "../types/mcp-tools";
+import { ListCreativesSchema, CreateAdCreativeSchema, PreviewAdSchema, TroubleshootCreativeSchema, AnalyzeCreativesSchema, CreativeValidationEnhancedSchema, UploadImageFromUrlSchema, } from "../types/mcp-tools.js";
 export function setupCreativeTools(server, metaClient) {
     registerCreativeTools(server, metaClient);
 }

@@ -1,4 +1,4 @@
-import { ListAudiencesSchema, CreateCustomAudienceSchema, CreateLookalikeAudienceSchema, EstimateAudienceSizeSchema, } from "../types/mcp-tools";
+import { ListAudiencesSchema, CreateCustomAudienceSchema, CreateLookalikeAudienceSchema, EstimateAudienceSizeSchema, } from "../types/mcp-tools.js";
 export function setupAudienceTools(server, metaClient) {
     registerAudienceTools(server, metaClient);
 }

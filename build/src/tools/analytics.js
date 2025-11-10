@@ -1,4 +1,4 @@
-import { GetInsightsSchema, ComparePerformanceSchema, ExportInsightsSchema, } from "../types/mcp-tools";
+import { GetInsightsSchema, ComparePerformanceSchema, ExportInsightsSchema, } from "../types/mcp-tools.js";
 export function setupAnalyticsTools(server, metaClient) {
     registerAnalyticsTools(server, metaClient);
 }
